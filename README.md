@@ -1,1 +1,1 @@
-# ArtificialIntelligenceLib
+# MachineLearningLib
