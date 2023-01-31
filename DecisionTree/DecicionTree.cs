@@ -7,7 +7,7 @@ public class DecisionTree
 {
     public Node Root { get; private set; }
     private int dataLength { get; set; }
-    public void Fit(int[][] x, int[] y, int minSample, int maxDepth)
+    public void Fit(DataSet ds, int minSample, int maxDepth)
     {
         this.Root = new Node();
         this.dataLength = x[0].Length;
