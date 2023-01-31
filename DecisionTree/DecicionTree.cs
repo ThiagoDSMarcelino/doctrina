@@ -7,11 +7,11 @@ public class DecisionTree
 {
     public Node Root { get; private set; }
     private int dataLength { get; set; }
-    public void Fit(DataSet ds, int minSample, int maxDepth)
+    public void Fit(DataSet<int, int> ds, int minSample, int maxDepth)
     {
         this.Root = new Node();
-        this.dataLength = x[0].Length;
-        this.Root.Epoch(x, y, minSample, maxDepth);
+        this.dataLength = ds.X[0].Length;
+        this.Root.Epoch(ds.X, ds.Y, minSample, maxDepth);
     }
 
     public float Choose(int[] data)

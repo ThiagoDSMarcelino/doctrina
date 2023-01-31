@@ -24,49 +24,48 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
         this.end = this.X.Length;
     }
     
-    public static DataSet<T1, T2> Load(string path, char separator, string targetLabel)
-    {
-        var ds = new DataSet<T1, T2>();
-        var data = DataSet<T1, T2>.open(path);
+    // public static DataSet<T1, T2> Load(string path, char separator, string targetLabel)
+    // {
+    //     var ds = new DataSet<T1, T2>();
+    //     var data = DataSet<T1, T2>.open(path);
         
-        ds.start = 0;
-        ds.end = data.Count() - 1;
-        ds.X = new T1[ds.Length - 1][];
-        ds.Y = new T2[ds.Length - 1];
+    //     ds.start = 0;
+    //     ds.end = data.Count() - 1;
+    //     ds.X = new T1[ds.Length - 1][];
+    //     ds.Y = new T2[ds.Length - 1];
 
-        int index = 0,
-            labelIndex = data
-            .First()
-            .Split(separator)
-            .Select((item, index) => (item, index))
-            .First(i => i.item == targetLabel)
-            .index;
+    //     int index = 0,
+    //         labelIndex = data
+    //         .First()
+    //         .Split(separator)
+    //         .Select((item, index) => (item, index))
+    //         .First(i => i.item == targetLabel)
+    //         .index;
             
-        foreach (var line in data.Skip(1))
-        {
-            string[] lineData = line.Split(separator);
-            var x = new float[lineData.Length - 1];
-            int flag = 0;
+    //     foreach (var line in data.Skip(1))
+    //     {
+    //         string[] lineData = line.Split(separator);
+    //         var x = new T1[lineData.Length - 1];
+    //         int flag = 0;
 
-            for (int i = 0; i < lineData.Length; i++)
-            {
-                int num = int.Parse(lineData[i]);
+    //         for (int i = 0; i < lineData.Length; i++)
+    //         {
+                
+    //             if (i == labelIndex)
+    //             {
+    //                 ds.Y[index] = (T2)Convert.ChangeType(lineData[i], T2);
+    //                 flag++;
+    //             }
+    //             else
+    //                 x[i - flag] = T1.Parse(lineData[i]);
+    //         }
 
-                if (i == labelIndex)
-                {
-                    ds.Y[index] = num;
-                    flag++;
-                }
-                else
-                    x[i - flag] = num;
-            }
+    //         ds.X[index] = x;
+    //         index++;
+    //     }
 
-            ds.X[index] = x;
-            index++;
-        }
-
-        return ds;
-    }
+    //     return ds;
+    // }
     private static IEnumerable<string> open(string file)
     {
         var stream = new StreamReader(file);
@@ -77,10 +76,11 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
         stream.Close();
     }
 
-    public (DataSet, DataSet) Split(float pct)
+    public (DataSet<T1, T2> ds1, DataSet<T1, T2> ds2) Split(float pct)
     {
-        DataSet ds1 = new DataSet(this.X, this.Y);
-        DataSet ds2 = new DataSet(this.X, this.Y);
+        DataSet<T1, T2>
+            ds1 = new DataSet<T1, T2>(this.X, this.Y),
+            ds2 = new DataSet<T1, T2>(this.X, this.Y);
         
         int div = (int)(pct * this.DataLength);
         ds1.end = div;
@@ -89,10 +89,10 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
         return (ds1, ds2);
     }
 
-    public DataSet RandSplit(float pct)
+    public DataSet<T1, T2> RandSplit(float pct)
     {
         Random rand = new Random();
-        DataSet dataset = new DataSet(X, Y);
+        DataSet<T1, T2> dataset = new DataSet<T1, T2>(X, Y);
         int div = (int)(pct * this.DataLength);
 
         var start = rand.Next(0, this.DataLength - div);

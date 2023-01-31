@@ -1,4 +1,4 @@
-namespace MachineLearningLib.NeuralNetwork;
+namespace MachineLearningLib.NeuralNetworkLib;
 
 using Core;
 

@@ -1,4 +1,4 @@
-namespace MachineLearningLib.NeuralNetwork;
+namespace MachineLearningLib.NeuralNetworkLib;
 
 using Core;
 
@@ -49,7 +49,7 @@ public class NeuralNetwork
     }
         
 
-    public float Score(DataSet ds)
+    public float Score(DataSet<float, int> ds)
     {
         float E = 0;
         foreach (var (x, y) in ds)
@@ -57,7 +57,7 @@ public class NeuralNetwork
             float[] z = this.Output(x);
             for (int i = 0; i < z.Length; i++)
             {
-                float value = z[i] - y[i];
+                float value = z[i] - (y == i ? 1 : 0);
                 value = value * value;
                 E += value;
             }
@@ -65,13 +65,13 @@ public class NeuralNetwork
         return E / (0.5f * ds.Length * ds.X.Length);
     }
 
-    public void Fit(DataSet ds, int epochs = 100, float eta = 0.05f)
+    public void Fit(DataSet<float, int> ds, int epochs = 100, float eta = 0.05f)
     {
         for (int i = 0; i < epochs; i++)
             this.epoch(ds, eta);
     }
 
-    private void epoch(DataSet ds, float eta)
+    private void epoch(DataSet<float, int> ds, float eta)
     {
         for (int i = 0; i < this.Layers.Length; i++)
         {

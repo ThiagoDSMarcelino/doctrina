@@ -1,4 +1,4 @@
-namespace MachineLearningLib.NeuralNetwork.Core;
+namespace MachineLearningLib.NeuralNetworkLib.Core;
 
 public class Linear : ActivationFunction
 {

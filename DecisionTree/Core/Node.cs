@@ -41,6 +41,7 @@ public class Node
                 .Select((e, i) => x[i][this.ColumnIndex])
                 .ToArray()
         );
+        
         List<int[]> leftX = new List<int[]>(),
                     rightX = new List<int[]>();
         

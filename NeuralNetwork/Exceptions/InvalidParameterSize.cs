@@ -1,4 +1,4 @@
-namespace MachineLearningLib.NeuralNetwork.Exceptions;
+namespace MachineLearningLib.NeuralNetworkLib.Exceptions;
 
 using System;
 
