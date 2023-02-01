@@ -1,8 +1,6 @@
-namespace MachineLearningLib.NeuralNetworkLib.Exceptions;
+namespace MachineLearningLib.Exceptions.DecisionTreeExceptions;
 
-using System;
-
-public class InvalidParameterSizeException : Exception
+public class InvalidParameterSizeException : System.Exception
 {
     public InvalidParameterSizeException() { }
     public InvalidParameterSizeException(string message) : base(message) { }
@@ -11,6 +9,6 @@ public class InvalidParameterSizeException : Exception
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 
-    public override string Message
-        => "The array of inputs is not the same size";
+    public override string Message =>
+        "The array of inputs is not the same size";
 }

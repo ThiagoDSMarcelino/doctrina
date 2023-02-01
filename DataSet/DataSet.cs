@@ -1,5 +1,6 @@
 namespace MachineLearningLib;
 
+using Exceptions.DataSetExceptions;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -7,65 +8,122 @@ using System.IO;
 using System;
 
 public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
+    where T1 : unmanaged
+    where T2 : unmanaged
 {
     public T1[][] X { get; private set; }
     public T2[] Y { get; private set; }
     public int Length => end - start;
-    public int DataLength => X[0].Length;
     private int start;
     private int end;
 
     private DataSet() { }
-    public DataSet(T1[][] X, T2[] Y)
+    public static DataSet<T1, T2> Load(T1[][] x, T2[] y, int start = 0, int end = -1)
     {
-        this.X = X;
-        this.Y = Y;
-        this.start = 0;
-        this.end = this.X.Length;
+        var ds = new DataSet<T1, T2>();
+        ds.X = x;
+        ds.Y = y;
+        ds.start = start;
+        ds.end = end < 0 ? x.Length : end;
+
+        return ds;
     }
     
-    // public static DataSet<T1, T2> Load(string path, char separator, string targetLabel)
-    // {
-    //     var ds = new DataSet<T1, T2>();
-    //     var data = DataSet<T1, T2>.open(path);
+    public static DataSet<T1, T2> Load(string path, char separator, string targetLabel, int start = 0, int end = -1)
+    {
+        var ds = new DataSet<T1, T2>();
+        var data = DataSet<T1, T2>.open(path);
         
-    //     ds.start = 0;
-    //     ds.end = data.Count() - 1;
-    //     ds.X = new T1[ds.Length - 1][];
-    //     ds.Y = new T2[ds.Length - 1];
+        ds.start = start;
+        ds.end = end < 0 ? data.Count() - 1 : end;
+        ds.X = new T1[ds.Length - 1][];
+        ds.Y = new T2[ds.Length - 1];
 
-    //     int index = 0,
-    //         labelIndex = data
-    //         .First()
-    //         .Split(separator)
-    //         .Select((item, index) => (item, index))
-    //         .First(i => i.item == targetLabel)
-    //         .index;
+        int index = 0,
+            labelIndex = data
+                .First()
+                .Split(separator)
+                .Select((item, index) => (item, index))
+                .First(i => i.item == targetLabel)
+                .index;
             
-    //     foreach (var line in data.Skip(1))
-    //     {
-    //         string[] lineData = line.Split(separator);
-    //         var x = new T1[lineData.Length - 1];
-    //         int flag = 0;
+        foreach (var line in data.Skip(1))
+        {
+            string[] lineData = line.Split(separator);
+            var x = new T1[lineData.Length - 1];
+            int flag = 0;
 
-    //         for (int i = 0; i < lineData.Length; i++)
-    //         {
-                
-    //             if (i == labelIndex)
-    //             {
-    //                 ds.Y[index] = (T2)Convert.ChangeType(lineData[i], T2);
-    //                 flag++;
-    //             }
-    //             else
-    //                 x[i - flag] = T1.Parse(lineData[i]);
-    //         }
+            for (int i = 0; i < lineData.Length; i++)
+            {
+                if (i == labelIndex)
+                {
+                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(T2));
+                    flag++;
+                }
+                else
+                {
+                    x[i - flag] = (T1)Convert.ChangeType(lineData[i], typeof(T1));
+                }
+            }
 
-    //         ds.X[index] = x;
-    //         index++;
-    //     }
+            ds.X[index] = x;
+            index++;
+        }
 
-    //     return ds;
-    // }
+        return ds;
+    }
+
+    public static DataSet<T1, T2> Load(string path, char separator, int targetIndex, int start = 0, int end = -1)
+    {
+        var ds = new DataSet<T1, T2>();
+        var data = DataSet<T1, T2>.open(path);
+        
+        ds.start = start;
+        ds.end = end < 0 ? data.Count() - 1 : end;
+        ds.X = new T1[ds.Length - 1][];
+        ds.Y = new T2[ds.Length - 1];
+
+        int index = 0;
+            
+        foreach (var line in data)
+        {
+            string[] lineData = line.Split(separator);
+            var x = new T1[lineData.Length - 1];
+            int flag = 0;
+
+            for (int i = 0; i < lineData.Length; i++)
+            {
+                if (i == targetIndex)
+                {
+                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(T2));
+                    flag++;
+                }
+                else
+                {
+                    x[i - flag] = (T1)Convert.ChangeType(lineData[i], typeof(T1));
+                }
+            }
+
+            ds.X[index] = x;
+            index++;
+        }
+
+        return ds;
+    }
+
+    public (DataSet<T1, T2> train, DataSet<T1, T2> test) SplitTrainTest(float pct)
+    {
+        if (1f < pct || pct < 0f)
+            throw new InvalidPercentageException();
+        
+        int split = (int)((1 - pct) * this.X.Length);
+        DataSet<T1, T2>
+            dsTrain = DataSet<T1, T2>.Load(this.X, this.Y, 0, split),
+            dsTest = DataSet<T1, T2>.Load(this.X, this.Y, split);
+
+        return (dsTrain, dsTest);
+    }
+
     private static IEnumerable<string> open(string file)
     {
         var stream = new StreamReader(file);
@@ -75,34 +133,6 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
 
         stream.Close();
     }
-
-    public (DataSet<T1, T2> ds1, DataSet<T1, T2> ds2) Split(float pct)
-    {
-        DataSet<T1, T2>
-            ds1 = new DataSet<T1, T2>(this.X, this.Y),
-            ds2 = new DataSet<T1, T2>(this.X, this.Y);
-        
-        int div = (int)(pct * this.DataLength);
-        ds1.end = div;
-        ds2.start = div;
-
-        return (ds1, ds2);
-    }
-
-    public DataSet<T1, T2> RandSplit(float pct)
-    {
-        Random rand = new Random();
-        DataSet<T1, T2> dataset = new DataSet<T1, T2>(X, Y);
-        int div = (int)(pct * this.DataLength);
-
-        var start = rand.Next(0, this.DataLength - div);
-        var end = rand.Next(start + div, this.DataLength);
-
-        dataset.start = start;
-        dataset.end = end;
-
-        return dataset;
-    }
     
     public IEnumerator<(T1[], T2)> GetEnumerator()
     {
@@ -110,6 +140,6 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
             yield return (X[i], Y[i]);
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() =>
+        GetEnumerator();
 }

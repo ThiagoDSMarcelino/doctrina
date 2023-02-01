@@ -1,5 +1,6 @@
-﻿using MachineLearningLib;
-using MachineLearningLib.NeuralNetworkLib;
+﻿using MachineLearningLib.NeuralNetworkLib;
+using MachineLearningLib.DecisionTreeLib;
+using MachineLearningLib;
 
 float[][] x = new float[][]
 {
@@ -25,8 +26,14 @@ int[] y = new int[]
     0
 };
 
-DataSet<float, int> ds = new DataSet<float, int>(x, y);
-NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
-neuralNetwork.Fit(ds, 10000);
+DataSet<float, int> ds = DataSet<float, int>.Load(x, y);
 
-System.Console.WriteLine(neuralNetwork.Choose(1f, 0f, 1f));
+var (train, test) = ds.SplitTrainTest(0.25f);
+
+// DecisionTree dt = new DecisionTree();
+
+// NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
+
+// neuralNetwork.Fit(train, 1000);
+
+// System.Console.WriteLine(neuralNetwork.Accuracy(test));

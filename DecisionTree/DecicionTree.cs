@@ -1,6 +1,6 @@
 namespace MachineLearningLib.DecisionTreeLib;
 
-using Exceptions;
+using Exceptions.DecisionTreeExceptions;
 using Core;
 
 public class DecisionTree

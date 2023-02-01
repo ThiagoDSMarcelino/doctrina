@@ -1,7 +1,7 @@
 namespace MachineLearningLib.NeuralNetworkLib.Core;
 
+using Exceptions.NeuralNetworkExceptions;
 using System;
-using Exceptions;
 
 public class Neuron
 {

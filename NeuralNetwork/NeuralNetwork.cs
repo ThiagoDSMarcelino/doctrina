@@ -29,15 +29,15 @@ public class NeuralNetwork
         return x;
     }
 
-    public (int, float) Choose(params float[] x) {
+    public (int Result, float Probability) Choose(params float[] x) {
         float[] output = this.Output(x);
-        float probability = float.MinValue;
+        float probability = float.MaxValue;
         int result = int.MinValue;
 
         for (int i = 0; i < output.Length; i++)
         {
             float value = output[i];
-            if (probability < value)
+            if (probability > value)
             {
                 probability = value;
                 result = i;
@@ -62,7 +62,20 @@ public class NeuralNetwork
                 E += value;
             }
         }
+
         return E / (0.5f * ds.Length * ds.X.Length);
+    }
+
+    public float Accuracy(DataSet<float, int> ds)
+    {
+        int count = 0;
+        foreach (var (x, y) in ds)
+        {
+            if (this.Choose(x).Result == y)
+                count++;
+        }
+
+        return count / ds.Length;
     }
 
     public void Fit(DataSet<float, int> ds, int epochs = 100, float eta = 0.05f)
@@ -83,8 +96,8 @@ public class NeuralNetwork
                 neuron.B += 0.1f;
                 float newError = Score(ds);
                 neuron.B -= 0.1f;
-
-                float dE = (newError - error) / 0.1f;
+                
+                float dE = (newError - error) * 10f;
                 neuron.B -= eta * dE;
                 error = Score(ds);
 
@@ -94,7 +107,7 @@ public class NeuralNetwork
                     newError = Score(ds);
                     neuron.W[k] -= 0.1f;
 
-                    dE = (newError - error) / 0.1f;
+                    dE = (newError - error) * 10f;
                     neuron.W[k] -= eta * dE;
                     error = Score(ds);
                 }
