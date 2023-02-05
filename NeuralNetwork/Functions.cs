@@ -1,4 +1,4 @@
-namespace MachineLearningLib.NeuralNetworkLib;
+namespace Doctrina.NeuralNetworkLib;
 
 using Core;
 

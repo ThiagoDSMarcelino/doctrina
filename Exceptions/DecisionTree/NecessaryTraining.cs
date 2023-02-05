@@ -1,4 +1,4 @@
-namespace MachineLearningLib.Exceptions.DecisionTreeExceptions;
+namespace Doctrina.Exceptions.DecisionTreeExceptions;
 
 public class NecessaryTrainingException : System.Exception
 {

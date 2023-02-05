@@ -1,4 +1,4 @@
-namespace MachineLearningLib.DecisionTreeLib;
+namespace Doctrina.DecisionTreeLib;
 
 using Exceptions.DecisionTreeExceptions;
 using System.Text;

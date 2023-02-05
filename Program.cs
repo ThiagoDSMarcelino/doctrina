@@ -1,6 +1,6 @@
-﻿using MachineLearningLib.NeuralNetworkLib;
-using MachineLearningLib.DecisionTreeLib;
-using MachineLearningLib;
+﻿using Doctrina.NeuralNetworkLib;
+using Doctrina.DecisionTreeLib;
+using Doctrina;
 using System;
 
 int[][] x = new int[][]

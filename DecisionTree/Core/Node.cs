@@ -1,4 +1,4 @@
-namespace MachineLearningLib.DecisionTreeLib.Core;
+namespace Doctrina.DecisionTreeLib.Core;
 
 using System.Collections.Generic;
 using System.Linq;

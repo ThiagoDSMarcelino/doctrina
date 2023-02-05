@@ -1,4 +1,4 @@
-namespace MachineLearningLib.Exceptions.DataSetExceptions;
+namespace Doctrina.Exceptions.DataSetExceptions;
 
 public class InvalidPercentageException : System.Exception
 {

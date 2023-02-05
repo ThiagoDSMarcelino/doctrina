@@ -1,4 +1,4 @@
-namespace MachineLearningLib.Exceptions.NeuralNetworkExceptions;
+namespace Doctrina.Exceptions.NeuralNetworkExceptions;
 
 using System;
 

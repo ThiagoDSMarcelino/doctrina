@@ -1,4 +1,4 @@
-namespace MachineLearningLib;
+namespace Doctrina;
 
 using Exceptions.DataSetExceptions;
 using System.Collections.Generic;
