@@ -4,25 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class Node
+public class Node<T1, T2>
+    where T1 : unmanaged
+    where T2 : unmanaged
 {
-    public Node Left { get; private set; }
-    public Node Right { get; private set; }
+    public Node<T1, T2> Left { get; private set; }
+    public Node<T1, T2> Right { get; private set; }
     public ComparisonSigns Comparison { get; private set; } = ComparisonSigns.Bigger;
     public float Target { get; private set; }
     public int ColumnIndex { get; private set; }
     public float Probability { get; private set; } = float.NaN;
         
-    public void Epoch(int[][] x, int[] y, int minSample, int maxDepth)
+    public void Epoch(DataSet<T1, T2> ds, int minSample, int maxDepth)
     {
-        if (maxDepth == 0 || x.GetLength(0) < minSample)
+        if (maxDepth == 0 || ds.X.Length < minSample)
         {
-            this.Probability = y.Count(i => i == 1) * 1f / (y.Length == 0 ? 1 : y.Length);
+            this.Probability = ds.Y.Count(i => i == 1) * 1f / (ds.Y.Length == 0 ? 1 : ds.Y.Length);
             return;
         }
 
-        float[] I = this.InformationEntropy(x, y),
-                C = this.ContentEntropy(x, y),
+        float[] I = this.InformationEntropy(ds),
+                C = this.ContentEntropy(ds),
                 G = new float[I.Length];
         
         for (int i = 0; i < G.Length; i++)
@@ -34,66 +36,65 @@ public class Node
             .index;
         
         this.ColumnIndex = colIndex;
-
-        this.Target = this.SelectTarget(
-            x.Length,
-            new int[x.Length]
-                .Select((_, i) => x[i][this.ColumnIndex])
-                .ToArray()
-        );
         
-        List<int[]> leftX = new List<int[]>(),
-                    rightX = new List<int[]>();
+        var col = new T1[ds.X.Length]
+            .Select((_, i) => ds.X[i][this.ColumnIndex])
+            .ToArray();
         
-        List<int> leftY = new List<int>(),
-                  rightY = new List<int>();
+        this.Target = (col.Max() + col.Min()) / 2;
         
-        for (int i = 0; i < x.GetLength(0); i++)
+        List<T1[]> leftX = new List<T1[]>(),
+                    rightX = new List<T1[]>();
+        
+        List<T2> leftY = new List<T2>(),
+                  rightY = new List<T2>();
+        
+        for (int i = 0; i < ds.X.Length; i++)
         {
-            if (this.Decision(x[i][colIndex]))
+            if (this.Decision(ds.X[i][colIndex]))
             {
-                rightX.Add(x[i]);
-                rightY.Add(y[i]);
+                rightX.Add(ds.X[i]);
+                rightY.Add(ds.Y[i]);
             }
             
             else
             {
-                leftX.Add(x[i]);
-                leftY.Add(y[i]);
+                leftX.Add(ds.X[i]);
+                leftY.Add(ds.Y[i]);
             }
         }
 
-        this.Left = new Node();
-        this.Right = new Node();
+        DataSet<T1, T2>
+            dsRight = DataSet<T1, T2>.Load(rightX.ToArray(), rightY.ToArray()),
+            dsLeft = DataSet<T1, T2>.Load(leftX.ToArray(), leftY.ToArray());
+        
+        this.Left = new Node<T1, T2>();
+        this.Right = new Node<T1, T2>();
 
-        this.Right.Epoch(rightX.ToArray(), rightY.ToArray(), minSample, maxDepth - 1);
-        this.Left.Epoch(leftX.ToArray(), leftY.ToArray(), minSample, maxDepth - 1);
+        this.Right.Epoch(dsRight, minSample, maxDepth - 1);
+        this.Left.Epoch(dsLeft, minSample, maxDepth - 1);
     }
 
-    public float SelectTarget(int n, int[] col)
+    public float[] InformationEntropy(DataSet<T1, T2> ds)
     {
-        return (col.Max() + col.Min()) / 2;
-    }
-
-    public float[] InformationEntropy(int[][] x, int[] y)
-    {
-        float n = y.Count(),
-              trueValues = y.Count(i => i == 1) / n,
-              falseValues = y.Count(i => i == 0) / n,
+        float n = ds.Y.Count(),
+              trueValues = ds.Y.Count(i => i == 1) / n,
+              falseValues = ds.Y.Count(i => i == 0) / n,
               E0 =  -(trueValues * MathF.Log2(trueValues)) +
                     -(falseValues * MathF.Log2(falseValues));
         
-        float[] result = new float[x[0].Length];
+        float[] result = new float[ds.X[0].Length];
         
-        for (int j = 0; j < x[0].Length; j++)
+        for (int j = 0; j < ds.X[0].Length; j++)
         {
-            int[]
-                col = new int[x.Length]
-                    .Select((e, i) => x[i][j])
+            T1[]
+                col = new int[ds.X.Length]
+                    .Select((e, i) => ds.X[i][j])
                     .ToArray(),
                 attrs = col
                     .Distinct()
                     .ToArray();
+            
             float ECol = 0;
 
             for (int i = 0; i < attrs.Length; i++)
@@ -109,7 +110,7 @@ public class Node
                     if (col[k] == attr)
                     {
                         attrCount++;
-                        if (y[k] == 1)
+                        if (ds.Y[k] == 1)
                             trueCount++;
                         else
                             falseCount++;
@@ -135,17 +136,17 @@ public class Node
     }
 
 
-    public float[] ContentEntropy(int[][] x, int[] y)
+    public float[] ContentEntropy(DataSet<T1, T2> ds)
     {
-        float n = y.Length;
+        float n = ds.Y.Length;
         
-        float[] result = new float[x[0].Length];
+        float[] result = new float[ds.X[0].Length];
 
-        for (int j = 0; j < x[0].Length; j++)
+        for (int j = 0; j < ds.X[0].Length; j++)
         {
-            int[]
-                col = new int[x.Length]
-                    .Select((e, i) => x[i][j])
+            T1[]
+                col = new int[ds.X.Length]
+                    .Select((e, i) => ds.X[i][j])
                     .ToArray(),
                 attrs = col
                     .Distinct()
@@ -174,12 +175,12 @@ public class Node
         return result;
     }
 
-    public bool Decision(int value)
+    public bool Decision(T1 value)
     {
         switch (this.Comparison)
         {
             case ComparisonSigns.Equal:
-                return value == this.Target;
+                return value.Equals(this.Target);
 
             case ComparisonSigns.Bigger:
                 return value > this.Target;

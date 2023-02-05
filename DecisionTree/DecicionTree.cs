@@ -7,18 +7,20 @@ using System.IO;
 using System;
 using Core;
 
-public class DecisionTree
+public class DecisionTree<T1, T2>
+    where T1 : unmanaged
+    where T2 : unmanaged
 {
-    public Node Root { get; private set; }
+    public Node<T1, T2> Root { get; private set; }
     private int dataLength { get; set; }
-    public void Fit(DataSet<int, int> ds, int minSample, int maxDepth)
+    public void Fit(DataSet<T1, T2> ds, int minSample, int maxDepth)
     {
-        this.Root = new Node();
+        this.Root = new Node<T1, T2>();
         this.dataLength = ds.X[0].Length;
-        this.Root.Epoch(ds.X, ds.Y, minSample, maxDepth);
+        this.Root.Epoch(ds, minSample, maxDepth);
     }
 
-    public float Choose(int[] data)
+    public float Choose(T1[] data)
     {
         if (this.Root is null)
             throw new NecessaryTrainingException();
@@ -30,7 +32,7 @@ public class DecisionTree
         
         return result;
     }
-    private float CheckNode(Node node, int[] data)
+    private float CheckNode(Node<T1, T2> node, T1[] data)
     {
         if (node.Decision(data[node.ColumnIndex]))
         {
@@ -60,7 +62,7 @@ public class DecisionTree
         }
     }
 
-    private StringBuilder appendNode(Node node, int tabCount, string comparative)
+    private StringBuilder appendNode(Node<T1, T2> node, int tabCount, string comparative)
     {
         string tab = String.Concat(Enumerable.Repeat("\t", tabCount));
         if (comparative == "if")

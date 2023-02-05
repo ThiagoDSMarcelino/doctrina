@@ -27,11 +27,12 @@ int[] y = new int[]
     0
 };
 
-DataSet<int, int> ds = DataSet<int, int>.Load(x, y);
+// DataSet<int, int> ds = DataSet<int, int>.Load(x, y);
+var ds = DataSet<float, float>.Load("trainingdata.txt", ',', 1);
 
 var (train, test) = ds.SplitTrainTest(0.25f);
 
-DecisionTree dt = new DecisionTree();
+DecisionTree<float, float> dt = new DecisionTree<float, float>();
 dt.Fit(ds, 2, 3);
 
 // Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
