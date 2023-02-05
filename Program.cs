@@ -1,16 +1,18 @@
-﻿using MachineLearningLib;
-using MachineLearningLib.NeuralNetworkLib;
+﻿using MachineLearningLib.NeuralNetworkLib;
+using MachineLearningLib.DecisionTreeLib;
+using MachineLearningLib;
+using System;
 
-float[][] x = new float[][]
+int[][] x = new int[][]
 {
-    new float[] { 1, 1, 1 },
-    new float[] { 0, 0, 1 },
-    new float[] { 1, 0, 1 },
-    new float[] { 0, 1, 1 },
-    new float[] { 1, 1, 0 },
-    new float[] { 1, 0, 0 },
-    new float[] { 0, 0, 0 },
-    new float[] { 0, 1, 0 }
+    new int[] { 1, 1, 1 },
+    new int[] { 0, 0, 1 },
+    new int[] { 1, 0, 1 },
+    new int[] { 0, 1, 1 },
+    new int[] { 1, 1, 0 },
+    new int[] { 1, 0, 0 },
+    new int[] { 0, 0, 0 },
+    new int[] { 0, 1, 0 }
 };
 
 int[] y = new int[]
@@ -25,8 +27,19 @@ int[] y = new int[]
     0
 };
 
-DataSet<float, int> ds = new DataSet<float, int>(x, y);
-NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
-neuralNetwork.Fit(ds, 10000);
+DataSet<int, int> ds = DataSet<int, int>.Load(x, y);
 
-System.Console.WriteLine(neuralNetwork.Choose(1f, 0f, 1f));
+var (train, test) = ds.SplitTrainTest(0.25f);
+
+DecisionTree dt = new DecisionTree();
+dt.Fit(ds, 2, 3);
+
+// Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
+
+dt.Save("Test/Test", 2, "SlaModel");
+
+// NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
+
+// neuralNetwork.Fit(train, 1000);
+
+// System.Console.WriteLine(neuralNetwork.Accuracy(test));

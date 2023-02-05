@@ -11,7 +11,7 @@ public class Node
     public ComparisonSigns Comparison { get; private set; } = ComparisonSigns.Bigger;
     public float Target { get; private set; }
     public int ColumnIndex { get; private set; }
-    public float Probability { get; private set; }
+    public float Probability { get; private set; } = float.NaN;
         
     public void Epoch(int[][] x, int[] y, int minSample, int maxDepth)
     {
@@ -38,7 +38,7 @@ public class Node
         this.Target = this.SelectTarget(
             x.Length,
             new int[x.Length]
-                .Select((e, i) => x[i][this.ColumnIndex])
+                .Select((_, i) => x[i][this.ColumnIndex])
                 .ToArray()
         );
         
@@ -83,9 +83,9 @@ public class Node
               E0 =  -(trueValues * MathF.Log2(trueValues)) +
                     -(falseValues * MathF.Log2(falseValues));
         
-        float[] result = new float[x.GetLength(1)];
+        float[] result = new float[x[0].Length];
         
-        for (int j = 0; j < x.GetLength(1); j++)
+        for (int j = 0; j < x[0].Length; j++)
         {
             int[]
                 col = new int[x.Length]

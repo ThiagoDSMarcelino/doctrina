@@ -1,4 +1,4 @@
-namespace MachineLearningLib.DecisionTreeLib.Exceptions;
+namespace MachineLearningLib.Exceptions.DecisionTreeExceptions;
 
 public class NecessaryTrainingException : System.Exception
 {
@@ -8,6 +8,6 @@ public class NecessaryTrainingException : System.Exception
     protected NecessaryTrainingException(
         System.Runtime.Serialization.SerializationInfo info,
         System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    public override string Message
-        => "It is necessary to train the decision tree before using it.";
+    public override string Message =>
+        "It is necessary to train the decision tree before using it.";
 }
