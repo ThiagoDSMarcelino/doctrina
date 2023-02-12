@@ -4,9 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+interface ISummable<T>
+{
+   T Add(T a, T b);
+}
+
 public class Node<T1, T2>
-    where T1 : unmanaged
-    where T2 : unmanaged
+    where T1 : unmanaged, IComparable, ISummable
+    where T2 : unmanaged, IComparable, ISummable
+    
 {
     public Node<T1, T2> Left { get; private set; }
     public Node<T1, T2> Right { get; private set; }
@@ -19,7 +25,7 @@ public class Node<T1, T2>
     {
         if (maxDepth == 0 || ds.X.Length < minSample)
         {
-            this.Probability = ds.Y.Count(i => i == 1) * 1f / (ds.Y.Length == 0 ? 1 : ds.Y.Length);
+            this.Probability = ds.Y.Count(i => i.CompareTo(1) == 0) * 1f / (ds.Y.Length == 0 ? 1 : ds.Y.Length);
             return;
         }
 
@@ -40,7 +46,7 @@ public class Node<T1, T2>
         var col = new T1[ds.X.Length]
             .Select((_, i) => ds.X[i][this.ColumnIndex])
             .ToArray();
-        
+
         this.Target = (col.Max() + col.Min()) / 2;
         
         List<T1[]> leftX = new List<T1[]>(),
@@ -78,8 +84,8 @@ public class Node<T1, T2>
     public float[] InformationEntropy(DataSet<T1, T2> ds)
     {
         float n = ds.Y.Count(),
-              trueValues = ds.Y.Count(i => i == 1) / n,
-              falseValues = ds.Y.Count(i => i == 0) / n,
+              trueValues = ds.Y.Count(i => i.CompareTo(1) == 0) / n,
+              falseValues = ds.Y.Count(i => i.CompareTo(1) == 0) / n,
               E0 =  -(trueValues * MathF.Log2(trueValues)) +
                     -(falseValues * MathF.Log2(falseValues));
         
@@ -107,10 +113,10 @@ public class Node<T1, T2>
                     
                 for (int k = 0; k < col.Length; k++)
                 {
-                    if (col[k] == attr)
+                    if (col[k].CompareTo(attr) == 0)
                     {
                         attrCount++;
-                        if (ds.Y[k] == 1)
+                        if (ds.Y[k].CompareTo(1) == 0)
                             trueCount++;
                         else
                             falseCount++;
@@ -161,7 +167,7 @@ public class Node<T1, T2>
                     
                 for (int k = 0; k < col.Length; k++)
                 {
-                    if (col[k] == attr)
+                    if (col[k].CompareTo(attr) == 0)
                         attrCount++;
                 }
                 float total = attrCount / n,
@@ -180,22 +186,22 @@ public class Node<T1, T2>
         switch (this.Comparison)
         {
             case ComparisonSigns.Equal:
-                return value.Equals(this.Target);
+                return value.CompareTo(this.Target) == 0;
 
             case ComparisonSigns.Bigger:
-                return value > this.Target;
+                return value.CompareTo(this.Target) > 0;
 
             case ComparisonSigns.BiggerEqual:
-                return value >= this.Target;
+                return value.CompareTo(this.Target) >= 0;
 
             case ComparisonSigns.Less:
-                return value < this.Target;
+                return value.CompareTo(this.Target) < 0;
 
             case ComparisonSigns.LessEqual:
-                return value <= this.Target;
+                return value.CompareTo(this.Target) <= 0;
 
             default:
-                return value != this.Target;
+                return value.CompareTo(this.Target) != 0;
         }
     }
 }
