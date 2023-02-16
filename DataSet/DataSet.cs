@@ -7,18 +7,18 @@ using System.Linq;
 using System.IO;
 using System;
 
-public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
+public class DataSet<T1, T2> : IEnumerable
     where T1 : unmanaged
     where T2 : unmanaged
 {
-    public T1[][] X { get; private set; }
-    public T2[] Y { get; private set; }
+    public DataType<T1>[][] X { get; private set; }
+    public DataType<T2>[] Y { get; private set; }
     public int Length => end - start;
     private int start;
     private int end;
 
     private DataSet() { }
-    public static DataSet<T1, T2> Load(T1[][] x, T2[] y, int start = 0, int end = -1)
+    public static DataSet<T1, T2> Load(DataType<T1>[][] x, DataType<T2>[] y, int start = 0, int end = -1)
     {
         var ds = new DataSet<T1, T2>();
         ds.X = x;
@@ -36,8 +36,8 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
         
         ds.start = start;
         ds.end = end < 0 ? data.Count() - 1 : end;
-        ds.X = new T1[ds.Length - 1][];
-        ds.Y = new T2[ds.Length - 1];
+        ds.X = new DataType<T1>[ds.Length - 1][];
+        ds.Y = new DataType<T2>[ds.Length - 1];
 
         int index = 0,
             labelIndex = data
@@ -57,7 +57,7 @@ public class DataSet<T1, T2> : IEnumerable<(T1[], T2)>
             {
                 if (i == labelIndex)
                 {
-                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(T2));
+                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(DataType<T1>));
                     flag++;
                 }
                 else
