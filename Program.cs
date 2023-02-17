@@ -37,7 +37,9 @@ dt.Fit(ds, 2, 3);
 
 // Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
 
-dt.Save("Test/Test", 2, "SlaModel");
+dt.Save("Test/Test", "SlaModel", 2);
+
+dt = DecisionTree.Load()
 
 // NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
 

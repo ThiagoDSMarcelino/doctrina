@@ -48,7 +48,7 @@ public class DecisionTree<T1, T2>
         }
     }
 
-    public void Save(string path, int num = 0, string className = "DefaultModel")
+    public void Save(string path, string className = "DefaultModel", int num = 0)
     {
         path += ".cs";
         
