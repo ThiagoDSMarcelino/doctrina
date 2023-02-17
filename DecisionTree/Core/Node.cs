@@ -4,28 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-interface ISummable<T>
-{
-   T Add(T a, T b);
-}
-
 public class Node<T1, T2>
-    where T1 : unmanaged, IComparable, ISummable
-    where T2 : unmanaged, IComparable, ISummable
+    where T1 : unmanaged
+    where T2 : unmanaged
     
 {
     public Node<T1, T2> Left { get; private set; }
     public Node<T1, T2> Right { get; private set; }
     public ComparisonSigns Comparison { get; private set; } = ComparisonSigns.Bigger;
-    public float Target { get; private set; }
+    public DataType<T1> Target { get; private set; }
     public int ColumnIndex { get; private set; }
-    public float Probability { get; private set; } = float.NaN;
+    public double Probability { get; private set; } = double.NaN;
         
     public void Epoch(DataSet<T1, T2> ds, int minSample, int maxDepth)
     {
         if (maxDepth == 0 || ds.X.Length < minSample)
         {
-            this.Probability = ds.Y.Count(i => i.CompareTo(1) == 0) * 1f / (ds.Y.Length == 0 ? 1 : ds.Y.Length);
+            this.Probability = ds.Y.Count(i => i == 1) * 1f / (ds.Y.Length == 0 ? 1 : ds.Y.Length);
             return;
         }
 
@@ -49,11 +44,13 @@ public class Node<T1, T2>
 
         this.Target = (col.Max() + col.Min()) / 2;
         
-        List<T1[]> leftX = new List<T1[]>(),
-                    rightX = new List<T1[]>();
+        List<DataType<T1>[]>
+            leftX = new List<DataType<T1>[]>(),
+            rightX = new List<DataType<T1>[]>();
         
-        List<T2> leftY = new List<T2>(),
-                  rightY = new List<T2>();
+        List<DataType<T2>>
+            leftY = new List<DataType<T2>>(),
+            rightY = new List<DataType<T2>>();
         
         for (int i = 0; i < ds.X.Length; i++)
         {
@@ -84,8 +81,8 @@ public class Node<T1, T2>
     public float[] InformationEntropy(DataSet<T1, T2> ds)
     {
         float n = ds.Y.Count(),
-              trueValues = ds.Y.Count(i => i.CompareTo(1) == 0) / n,
-              falseValues = ds.Y.Count(i => i.CompareTo(1) == 0) / n,
+              trueValues = ds.Y.Count(i => i == 1) / n,
+              falseValues = ds.Y.Count(i => i == 1) / n,
               E0 =  -(trueValues * MathF.Log2(trueValues)) +
                     -(falseValues * MathF.Log2(falseValues));
         
@@ -93,7 +90,7 @@ public class Node<T1, T2>
         
         for (int j = 0; j < ds.X[0].Length; j++)
         {
-            T1[]
+            DataType<T1>[]
                 col = new int[ds.X.Length]
                     .Select((e, i) => ds.X[i][j])
                     .ToArray(),
@@ -113,10 +110,10 @@ public class Node<T1, T2>
                     
                 for (int k = 0; k < col.Length; k++)
                 {
-                    if (col[k].CompareTo(attr) == 0)
+                    if (col[k] == attr)
                     {
                         attrCount++;
-                        if (ds.Y[k].CompareTo(1) == 0)
+                        if (ds.Y[k] == 1)
                             trueCount++;
                         else
                             falseCount++;
@@ -150,7 +147,7 @@ public class Node<T1, T2>
 
         for (int j = 0; j < ds.X[0].Length; j++)
         {
-            T1[]
+            DataType<T1>[]
                 col = new int[ds.X.Length]
                     .Select((e, i) => ds.X[i][j])
                     .ToArray(),
@@ -167,7 +164,7 @@ public class Node<T1, T2>
                     
                 for (int k = 0; k < col.Length; k++)
                 {
-                    if (col[k].CompareTo(attr) == 0)
+                    if (col[k] == attr)
                         attrCount++;
                 }
                 float total = attrCount / n,
@@ -181,27 +178,27 @@ public class Node<T1, T2>
         return result;
     }
 
-    public bool Decision(T1 value)
+    public bool Decision(DataType<T1> value)
     {
         switch (this.Comparison)
         {
             case ComparisonSigns.Equal:
-                return value.CompareTo(this.Target) == 0;
+                return value == this.Target;
 
             case ComparisonSigns.Bigger:
-                return value.CompareTo(this.Target) > 0;
+                return value > this.Target;
 
             case ComparisonSigns.BiggerEqual:
-                return value.CompareTo(this.Target) >= 0;
+                return value >= this.Target;
 
             case ComparisonSigns.Less:
-                return value.CompareTo(this.Target) < 0;
+                return value < this.Target;
 
             case ComparisonSigns.LessEqual:
-                return value.CompareTo(this.Target) <= 0;
+                return value <= this.Target;
 
             default:
-                return value.CompareTo(this.Target) != 0;
+                return value != this.Target;
         }
     }
 }

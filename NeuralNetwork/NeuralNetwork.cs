@@ -53,13 +53,13 @@ public class NeuralNetwork
         float E = 0;
         foreach (var (x, y) in ds)
         {
-            float[] z = this.Output(x);
-            for (int i = 0; i < z.Length; i++)
-            {
-                float value = z[i] - (y == i ? 1 : 0);
-                value = value * value;
-                E += value;
-            }
+            // float[] z = this.Output(x);
+            // for (int i = 0; i < z.Length; i++)
+            // {
+            //     float value = z[i] - (y == i ? 1 : 0);
+            //     value = value * value;
+            //     E += value;
+            // }
         }
 
         return E / (0.5f * ds.Length * ds.X.Length);
@@ -70,8 +70,8 @@ public class NeuralNetwork
         int count = 0;
         foreach (var (x, y) in ds)
         {
-            if (this.Choose(x).Result == y)
-                count++;
+            // if (this.Choose(x).Result == y)
+            //     count++;
         }
 
         return count / ds.Length;

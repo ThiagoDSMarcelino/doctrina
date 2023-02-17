@@ -50,19 +50,19 @@ public class DataSet<T1, T2> : IEnumerable
         foreach (var line in data.Skip(1))
         {
             string[] lineData = line.Split(separator);
-            var x = new T1[lineData.Length - 1];
+            var x = new DataType<T1>[lineData.Length - 1];
             int flag = 0;
 
             for (int i = 0; i < lineData.Length; i++)
             {
                 if (i == labelIndex)
                 {
-                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(DataType<T1>));
+                    ds.Y[index] = (DataType<T2>)Convert.ChangeType(lineData[i], typeof(T2));
                     flag++;
                 }
                 else
                 {
-                    x[i - flag] = (T1)Convert.ChangeType(lineData[i], typeof(T1));
+                    x[i - flag] = (DataType<T1>)Convert.ChangeType(lineData[i], typeof(T1));
                 }
             }
 
@@ -80,27 +80,27 @@ public class DataSet<T1, T2> : IEnumerable
         
         ds.start = start;
         ds.end = end < 0 ? data.Count() - 1 : end;
-        ds.X = new T1[ds.Length - 1][];
-        ds.Y = new T2[ds.Length - 1];
+        ds.X = new DataType<T1>[ds.Length - 1][];
+        ds.Y = new DataType<T2>[ds.Length - 1];
 
         int index = 0;
             
         foreach (var line in data)
         {
             string[] lineData = line.Split(separator);
-            var x = new T1[lineData.Length - 1];
+            var x = new DataType<T1>[lineData.Length - 1];
             int flag = 0;
 
             for (int i = 0; i < lineData.Length; i++)
             {
                 if (i == targetIndex)
                 {
-                    ds.Y[index] = (T2)Convert.ChangeType(lineData[i], typeof(T2));
+                    ds.Y[index] = (DataType<T2>)Convert.ChangeType(lineData[i], typeof(T2));
                     flag++;
                 }
                 else
                 {
-                    x[i - flag] = (T1)Convert.ChangeType(lineData[i], typeof(T1));
+                    x[i - flag] = (DataType<T1>)Convert.ChangeType(lineData[i], typeof(T1));
                 }
             }
 
@@ -134,7 +134,7 @@ public class DataSet<T1, T2> : IEnumerable
         stream.Close();
     }
     
-    public IEnumerator<(T1[], T2)> GetEnumerator()
+    public IEnumerator<(DataType<T1>[], DataType<T2>)> GetEnumerator()
     {
         for (int i = start; i < end; i++)
             yield return (X[i], Y[i]);

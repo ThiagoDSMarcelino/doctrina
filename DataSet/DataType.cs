@@ -1,77 +1,71 @@
 namespace Doctrina;
 
+using System;
+
 public class DataType<T>
 {
-    private T value;
-    public T Value
-    {
-        get { return value; }
-        set { Value = value; }
-    }
+    public T Value { get; private set; }
 
-    public DataType(T newValue) =>
-        this.value = newValue;
+    public DataType(T value) =>
+        this.Value = value;
 
-    public static DataType<T> operator +(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        dynamic result = x + y;
-        return new DataType<T>(result);
-    }
+    // Sum
+    public static DataType<T> operator +(DataType<T> a, DataType<T> b) =>
+        new DataType<T>((dynamic)a.Value + (dynamic)b.Value);
 
-    public static DataType<T> operator -(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        dynamic result = x - y;
-        return new DataType<T>(result);
-    }
+    // Sub
+    public static DataType<T> operator -(DataType<T> a, DataType<T> b) =>
+        new DataType<T>((dynamic)a.Value - (dynamic)b.Value);
 
-    public static DataType<T> operator *(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        dynamic result = x * y;
-        return new DataType<T>(result);
-    }
+    // Mul
+    public static DataType<T> operator *(DataType<T> a, DataType<T> b) =>
+        new DataType<T>((dynamic)a.Value * (dynamic)b.Value);
 
-    public static DataType<T> operator /(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        dynamic result = x / y;
-        return new DataType<T>(result);
-    }
+    // Div
+    public static DataType<T> operator /(DataType<T> a, DataType<T> b) =>
+        new DataType<T>((dynamic)a.Value / (dynamic)b.Value);
+    public static DataType<T> operator /(DataType<T> a, float b) =>
+        new DataType<T>((dynamic)a.Value / b);
 
-    public static bool operator ==(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        return x == y;
-    }
+    // Equal
+    public static bool operator ==(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value == (dynamic)b.Value;
+    public static bool operator ==(DataType<T> a, float b) =>
+        (dynamic)a.Value == b;
 
-    public static bool operator !=(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        return x != y;
-    }
+    // Different
+    public static bool operator !=(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value != (dynamic)b.Value;
+    public static bool operator !=(DataType<T> a, float b) =>
+        (dynamic)a.Value != b;
 
-    public static bool operator >(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        return x > y;
-    }
+    // Bigger
+    public static bool operator >(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value > (dynamic)b.Value;
 
-    public static bool operator <(DataType<T> a, DataType<T> b)
-    {
-        dynamic x = a.Value;
-        dynamic y = b.Value;
-        return x < y;
-    }
+    // Lower
+    public static bool operator <(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value < (dynamic)b.Value;
+    
+    // Bigger or Equal
+    public static bool operator >=(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value >= (dynamic)b.Value;
 
+    // Lower or Equal
+    public static bool operator <=(DataType<T> a, DataType<T> b) =>
+        (dynamic)a.Value <= (dynamic)b.Value;
+
+    // Cast
+    public static implicit operator DataType<T>(float value) =>
+        new DataType<T>((T)Convert.ChangeType(value, typeof(T)));  
+
+    // Overrides
     public override string ToString() =>
-        this.value.ToString();
+        this.Value.ToString();
+
+    public override bool Equals(object obj) =>
+        base.Equals(obj);
+
+    public override int GetHashCode() =>
+        base.GetHashCode();
 }

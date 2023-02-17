@@ -8,8 +8,8 @@ using System;
 using Core;
 
 public class DecisionTree<T1, T2>
-    where T1 : unmanaged, IComparable
-    where T2 : unmanaged, IComparable
+    where T1 : unmanaged
+    where T2 : unmanaged
 {
     public Node<T1, T2> Root { get; private set; }
     private int dataLength { get; set; }
@@ -20,7 +20,7 @@ public class DecisionTree<T1, T2>
         this.Root.Epoch(ds, minSample, maxDepth);
     }
 
-    public float Choose(T1[] data)
+    public double Choose(DataType<T1>[] data)
     {
         if (this.Root is null)
             throw new NecessaryTrainingException();
@@ -28,11 +28,11 @@ public class DecisionTree<T1, T2>
         if (this.dataLength != data.Length)
             throw new InvalidParameterSizeException();
         
-        float result = this.CheckNode(this.Root, data);
+        double result = this.CheckNode(this.Root, data);
         
         return result;
     }
-    private float CheckNode(Node<T1, T2> node, T1[] data)
+    private double CheckNode(Node<T1, T2> node, DataType<T1>[] data)
     {
         if (node.Decision(data[node.ColumnIndex]))
         {
@@ -76,7 +76,7 @@ public class DecisionTree<T1, T2>
         if (node.Left is not null)
             nodeCode.Append(this.appendNode(node.Left, tabCount + 1, "else" ));
 
-        if (!float.IsNaN(node.Probability))
+        if (!double.IsNaN(node.Probability))
             nodeCode.Append(tab + $"\treturn {node.Probability}f;\n".Replace(',', '.'));
         nodeCode.Append(tab + "}\n");
         return nodeCode;
