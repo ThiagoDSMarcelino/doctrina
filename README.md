@@ -14,6 +14,11 @@ It is necessary to have .NET Framework 7 or above installed on the machine, and 
 ## Usage
 
 ```csharp
+
+using Doctrina.DecisionTreeLib;
+using Doctrina;
+using System;
+
 // DecisionTree example
 
 var ds = DataSet<float, float>.Load("trainingdata.txt", ',', 1);
