@@ -14,14 +14,13 @@ It is necessary to have .NET Framework 7 or above installed on the machine, and 
 ## Usage
 
 ```csharp
-
 using Doctrina.DecisionTreeLib;
 using Doctrina;
 using System;
 
 // DecisionTree example
 
-var ds = DataSet<float, float>.Load("trainingdata.txt", ',', 1);
+var ds = DataSet<float, float>.Load("Test/trainingdata.txt", ',', 1);
 
 var (train, test) = ds.SplitTrainTest(0.25f);
 
@@ -29,10 +28,10 @@ DecisionTree<float, float> dt = new DecisionTree<float, float>();
 
 dt.Fit(ds, 2, 3);
 
-Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
+// Choose returns the probability of being true
+Console.WriteLine($"{dt.Choose(test.X[0])} {test.Y}");
 
 
 // You can save to use the same model without train again
 dt.Save("Test/TestDecisionTree", "TestModel");
-
 ```
