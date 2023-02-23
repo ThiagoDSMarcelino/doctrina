@@ -5,8 +5,8 @@ using System.Linq;
 using System;
 
 public class Node<T1, T2>
-    where T1 : unmanaged
-    where T2 : unmanaged
+    where T1 : unmanaged, IComparable
+    where T2 : unmanaged, IComparable
     
 {
     public Node<T1, T2> Left { get; private set; }

@@ -8,8 +8,8 @@ using System.IO;
 using System;
 
 public class DataSet<T1, T2> : IEnumerable
-    where T1 : unmanaged
-    where T2 : unmanaged
+    where T1 : unmanaged, IComparable
+    where T2 : unmanaged, IComparable
 {
     public DataType<T1>[][] X { get; private set; }
     public DataType<T2>[] Y { get; private set; }
@@ -35,9 +35,9 @@ public class DataSet<T1, T2> : IEnumerable
         var data = DataSet<T1, T2>.open(path);
         
         ds.start = start;
-        ds.end = end < 0 ? data.Count() - 1 : end;
-        ds.X = new DataType<T1>[ds.Length - 1][];
-        ds.Y = new DataType<T2>[ds.Length - 1];
+        ds.end = end < 0 ? data.Count() : end;
+        ds.X = new DataType<T1>[ds.Length][];
+        ds.Y = new DataType<T2>[ds.Length];
 
         int index = 0,
             labelIndex = data
@@ -79,12 +79,11 @@ public class DataSet<T1, T2> : IEnumerable
         var data = DataSet<T1, T2>.open(path);
         
         ds.start = start;
-        ds.end = end < 0 ? data.Count() - 1 : end;
-        ds.X = new DataType<T1>[ds.Length - 1][];
-        ds.Y = new DataType<T2>[ds.Length - 1];
-
+        ds.end = end < 0 ? data.Count() : end;
+        ds.X = new DataType<T1>[ds.Length][];
+        ds.Y = new DataType<T2>[ds.Length];
         int index = 0;
-            
+
         foreach (var line in data)
         {
             string[] lineData = line.Split(separator);
@@ -95,15 +94,15 @@ public class DataSet<T1, T2> : IEnumerable
             {
                 if (i == targetIndex)
                 {
-                    ds.Y[index] = (DataType<T2>)Convert.ChangeType(lineData[i], typeof(T2));
+                    ds.Y[index] = (DataType<T2>)float.Parse(lineData[i]);
                     flag++;
                 }
                 else
                 {
-                    x[i - flag] = (DataType<T1>)Convert.ChangeType(lineData[i], typeof(T1));
+                    x[i - flag] = (DataType<T1>)float.Parse(lineData[i]);
                 }
             }
-
+            
             ds.X[index] = x;
             index++;
         }
@@ -113,7 +112,7 @@ public class DataSet<T1, T2> : IEnumerable
 
     public (DataSet<T1, T2> train, DataSet<T1, T2> test) SplitTrainTest(float pct)
     {
-        if (1f < pct || pct < 0f)
+        if (pct < 0f || pct > 1f)
             throw new InvalidPercentageException();
         
         int split = (int)((1 - pct) * this.X.Length);

@@ -8,8 +8,8 @@ using System;
 using Core;
 
 public class DecisionTree<T1, T2>
-    where T1 : unmanaged
-    where T2 : unmanaged
+    where T1 : unmanaged, IComparable
+    where T2 : unmanaged, IComparable
 {
     public Node<T1, T2> Root { get; private set; }
     private int dataLength { get; set; }

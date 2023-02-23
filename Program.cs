@@ -12,7 +12,8 @@ DecisionTree<float, float> dt = new DecisionTree<float, float>();
 
 dt.Fit(ds, 2, 3);
 
-Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
+// Choose returns the probability of being true
+Console.WriteLine($"{dt.Choose(test.X[0])} {test.Y[0]}");
 
 
 // You can save to use the same model without train again

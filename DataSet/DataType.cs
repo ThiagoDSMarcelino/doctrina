@@ -2,7 +2,8 @@ namespace Doctrina;
 
 using System;
 
-public class DataType<T>
+public class DataType<T> : IComparable
+    where T: IComparable
 {
     public T Value { get; private set; }
 
@@ -56,8 +57,8 @@ public class DataType<T>
         (dynamic)a.Value <= (dynamic)b.Value;
 
     // Cast
-    public static implicit operator DataType<T>(float value) =>
-        new DataType<T>((T)Convert.ChangeType(value, typeof(T)));  
+    public static explicit operator DataType<T>(float value) =>
+        new DataType<T>((T)Convert.ChangeType(value, typeof(T)));
 
     // Overrides
     public override string ToString() =>
@@ -68,4 +69,16 @@ public class DataType<T>
 
     public override int GetHashCode() =>
         base.GetHashCode();
+
+    public int CompareTo(object obj)
+    {
+        if (obj == null) return 1;
+
+        DataType<T> otherDataType = obj as DataType<T>;
+
+        if (otherDataType != null)
+            return this.Value.CompareTo(otherDataType.Value);
+        
+        throw new ArgumentException("Object is not a DataType");
+    }
 }
