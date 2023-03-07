@@ -1,6 +1,6 @@
-namespace Doctrina;
-
 using System;
+
+namespace Doctrina;
 
 public class DataType<T> : IComparable
     where T: IComparable

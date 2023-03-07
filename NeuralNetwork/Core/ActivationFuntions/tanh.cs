@@ -1,6 +1,6 @@
-namespace Doctrina.NeuralNetworkLib.Core;
-
 using System;
+
+namespace Doctrina.NeuralNetworkLib.Core;
 
 public class Tanh : ActivationFunction
 {

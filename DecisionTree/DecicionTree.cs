@@ -1,18 +1,32 @@
-namespace Doctrina.DecisionTreeLib;
-
-using Exceptions.DecisionTreeExceptions;
 using System.Text;
 using System.Linq;
 using System.IO;
 using System;
+
+namespace Doctrina.DecisionTreeLib;
+
+using Exceptions.DecisionTreeExceptions;
 using Core;
 
+/// <summary>
+/// Represents a Classification Decision Tree (DT)
+/// </summary>
 public class DecisionTree<T1, T2>
     where T1 : unmanaged, IComparable
     where T2 : unmanaged, IComparable
 {
+    /// <summary>
+    /// The first node of the tree
+    /// </summary>
     public Node<T1, T2> Root { get; private set; }
     private int dataLength { get; set; }
+
+    /// <summary>
+    /// Generates the nodes necessary for the DT to be able to classify data
+    /// </summary>
+    /// <param name="ds">DataSet used to train the DT</param>
+    /// <param name="ds">Minimum number of lines in X to create a new node</param>
+    /// <param name="ds">Maximum sequential nodes that can be created</param>
     public void Fit(DataSet<T1, T2> ds, int minSample, int maxDepth)
     {
         this.Root = new Node<T1, T2>();

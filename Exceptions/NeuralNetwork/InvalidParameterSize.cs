@@ -1,6 +1,6 @@
-namespace Doctrina.Exceptions.NeuralNetworkExceptions;
-
 using System;
+
+namespace Doctrina.Exceptions.NeuralNetworkExceptions;
 
 public class InvalidParameterSizeException : Exception
 {

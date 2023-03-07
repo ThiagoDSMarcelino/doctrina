@@ -1,8 +1,8 @@
-namespace Doctrina.DecisionTreeLib.Core;
-
 using System.Collections.Generic;
 using System.Linq;
 using System;
+
+namespace Doctrina.DecisionTreeLib.Core;
 
 public class Node<T1, T2>
     where T1 : unmanaged, IComparable

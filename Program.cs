@@ -15,6 +15,5 @@ dt.Fit(ds, 2, 3);
 // Choose returns the probability of being true
 Console.WriteLine($"{dt.Choose(test.X[0])} {test.Y[0]}");
 
-
 // You can save to use the same model without train again
 dt.Save("Test/TestDecisionTree", "TestModel");

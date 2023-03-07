@@ -1,7 +1,8 @@
+using System;
+
 namespace Doctrina.NeuralNetworkLib.Core;
 
 using Exceptions.NeuralNetworkExceptions;
-using System;
 
 public class Neuron
 {

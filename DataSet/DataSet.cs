@@ -1,11 +1,12 @@
-namespace Doctrina;
-
-using Exceptions.DataSetExceptions;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.IO;
 using System;
+
+namespace Doctrina;
+
+using Exceptions.DataSetExceptions;
 
 public class DataSet<T1, T2> : IEnumerable
     where T1 : unmanaged, IComparable
