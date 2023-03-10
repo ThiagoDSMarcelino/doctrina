@@ -25,8 +25,8 @@ public class DecisionTree<T1, T2>
     /// Generates the nodes necessary for the DT to be able to classify data
     /// </summary>
     /// <param name="ds">DataSet used to train the DT</param>
-    /// <param name="ds">Minimum number of lines in X to create a new node</param>
-    /// <param name="ds">Maximum sequential nodes that can be created</param>
+    /// <param name="minSample">Minimum number of lines in X to create a new node</param>
+    /// <param name="maxDepth">Maximum sequential nodes that can be created</param>
     public void Fit(DataSet<T1, T2> ds, int minSample, int maxDepth)
     {
         this.Root = new Node<T1, T2>();
@@ -34,6 +34,11 @@ public class DecisionTree<T1, T2>
         this.Root.Epoch(ds, minSample, maxDepth);
     }
 
+    /// <summary>
+    /// Check each node with the values
+    /// </summary>
+    /// <param name="data">Data to be checked</param>
+    /// <returns>Probability of being true according to the data</returns>
     public double Choose(DataType<T1>[] data)
     {
         if (this.Root is null)
@@ -62,12 +67,18 @@ public class DecisionTree<T1, T2>
         }
     }
 
-    public void Save(string path, string className = "DefaultModel", int num = 0)
+    /// <summary>
+    /// Save the decision tree in a C# file
+    /// </summary>
+    /// <param name="path">Path to save the file with the file name, but without the extension (.cs)</param>
+    /// <param name="className">Name of the class that the method will be part of</param>
+    /// <param name="methodName">Method name</param>
+    public void Save(string path, string className = "DefaultModel", string methodName = "Choose")
     {
         path += ".cs";
         
         StringBuilder func = new StringBuilder($"public partial class {className}" + "\n{\n");
-        func.Append($"\tpublic float Choose{num}(int[] data)\n" + "\t{\n");
+        func.Append($"\tpublic float {methodName}(int[] data)\n" + "\t{\n");
         func.Append(this.appendNode(this.Root, 2, "if"));
         func.Append("\t}\n}");
         using (StreamWriter sw = File.CreateText(path))

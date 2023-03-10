@@ -29,5 +29,4 @@ Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
 
 // You can save to use the same model without train again
 dt.Save("Test/TestDecisionTree", "TestModel");
-
 ```

@@ -41,8 +41,12 @@ public class DataType<T> : IComparable
         (dynamic)a.Value != b;
 
     // Bigger
-    public static bool operator >(DataType<T> a, DataType<T> b) =>
-        (dynamic)a.Value > (dynamic)b.Value;
+    public static bool operator >(DataType<T> a, DataType<T> b)
+    {
+        if (a is null || b is null)
+            return false;
+        return (dynamic)a.Value > (dynamic)b.Value;
+    }
 
     // Lower
     public static bool operator <(DataType<T> a, DataType<T> b) =>
@@ -76,9 +80,9 @@ public class DataType<T> : IComparable
 
         DataType<T> otherDataType = obj as DataType<T>;
 
-        if (otherDataType != null)
+        // if (otherDataType != null)
             return this.Value.CompareTo(otherDataType.Value);
         
-        throw new ArgumentException("Object is not a DataType");
+        // throw new ArgumentException("Object is not a DataType");
     }
 }
