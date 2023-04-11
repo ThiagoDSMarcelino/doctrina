@@ -1,6 +1,4 @@
 ![GitHub](https://img.shields.io/github/license/ThiagoDSMarcelino/Doctrina?color=blue)
-![GitHub last commit](https://img.shields.io/github/last-commit/ThiagoDSMarcelino/Doctrina)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ThiagoDSMarcelino/Doctrina)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/Doctrina)
 
 # Doctrina
