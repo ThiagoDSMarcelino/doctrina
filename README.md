@@ -1,13 +1,13 @@
+# Doctrina
 ![GitHub](https://img.shields.io/github/license/ThiagoDSMarcelino/Doctrina?color=blue)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/Doctrina)
 
-# Doctrina
-
-Introducing Doctrina, the most user-friendly machine learning library for teaching and explaining AI. This library is designed from scratch to address the complex challenges of teaching students about the world of artificial intelligence, using simple syntax and being an open source project. It is perfect for explaining and demonstrating how ML/DL algorithms really work.
+## Introduction
+Doctrina, the most user-friendly machine learning library for teaching and explaining AI. This library is designed from scratch to address the complex challenges of teaching students about the world of artificial intelligence, using simple syntax and being an open source project. It is perfect for explaining and demonstrating how ML/DL algorithms really work.
 
 ## Installation
 
-It is necessary to have .NET Framework 7 or above installed on the machine, and that is all.
+// TODO
 
 ## Usage
 
