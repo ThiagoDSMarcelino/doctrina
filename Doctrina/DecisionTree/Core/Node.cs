@@ -2,9 +2,9 @@ namespace Doctrina.DecisionTreeLib.Core;
 
 public class Node
 {
-    public Node Left { get; private set; }
+    public Node? Left { get; private set; }
 
-    public Node Right { get; private set; }
+    public Node? Right { get; private set; }
     
     public ComparisonSigns Comparison { get; private set; } = ComparisonSigns.Bigger;
     
@@ -13,7 +13,7 @@ public class Node
     public int ColumnIndex { get; private set; }
     
     public float Probability { get; private set; } = float.NaN;
-        
+    
     public void Epoch(int[][] x, int[] y, int minSample, int maxDepth)
     {
         if (maxDepth == 0 || x.GetLength(0) < minSample)
@@ -183,25 +183,15 @@ public class Node
 
     public bool Decision(int value)
     {
-        switch (Comparison)
+        return Comparison switch
         {
-            case ComparisonSigns.Equal:
-                return value == Target;
-
-            case ComparisonSigns.Bigger:
-                return value > Target;
-
-            case ComparisonSigns.BiggerEqual:
-                return value >= Target;
-
-            case ComparisonSigns.Less:
-                return value < Target;
-
-            case ComparisonSigns.LessEqual:
-                return value <= Target;
-
-            default:
-                return value != Target;
-        }
+            ComparisonSigns.Equal => value == Target,
+            ComparisonSigns.Bigger => value > Target,
+            ComparisonSigns.BiggerEqual => value >= Target,
+            ComparisonSigns.Less => value < Target,
+            ComparisonSigns.LessEqual => value <= Target,
+            ComparisonSigns.Different => value != Target,
+            _ => throw new Exception() // TODO
+        };
     }
 }

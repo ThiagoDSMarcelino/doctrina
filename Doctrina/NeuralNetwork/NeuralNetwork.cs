@@ -21,7 +21,6 @@ public class NeuralNetwork
             );
     }
 
-
     public float[] Output(params float[] x)
     {
         for (int i = 0; i < Layers.Length; i++)
@@ -38,6 +37,7 @@ public class NeuralNetwork
         for (int i = 0; i < output.Length; i++)
         {
             float value = output[i];
+
             if (probability > value)
             {
                 probability = value;
@@ -52,9 +52,11 @@ public class NeuralNetwork
     public float Score(DataSet<float, int> ds)
     {
         float E = 0;
+
         foreach (var (x, y) in ds)
         {
             float[] z = Output(x);
+
             for (int i = 0; i < z.Length; i++)
             {
                 float value = z[i] - (y == i ? 1 : 0);
@@ -69,6 +71,7 @@ public class NeuralNetwork
     public float Accuracy(DataSet<float, int> ds)
     {
         int count = 0;
+
         foreach (var (x, y) in ds)
         {
             if (Choose(x).Result == y)
@@ -81,10 +84,10 @@ public class NeuralNetwork
     public void Fit(DataSet<float, int> ds, int epochs = 100, float eta = 0.05f)
     {
         for (int i = 0; i < epochs; i++)
-            epoch(ds, eta);
+            Epoch(ds, eta);
     }
 
-    private void epoch(DataSet<float, int> ds, float eta)
+    private void Epoch(DataSet<float, int> ds, float eta)
     {
         for (int i = 0; i < Layers.Length; i++)
         {

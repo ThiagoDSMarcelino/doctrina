@@ -13,10 +13,11 @@ public class Neuron
     public Neuron(int dataSize, ActivationFunction function)
     {
         Function = function;
-        B = gaussianDist();
+        B = GaussianDist();
         W = new float[dataSize];
+
         for (int i = 0; i < dataSize; i++)
-            W[i] = gaussianDist();
+            W[i] = GaussianDist();
     }
     
     public Neuron(float bias, float[] weights, ActivationFunction function)
@@ -36,10 +37,11 @@ public class Neuron
             s += x[i] * W[i];
         
         float z = Function.Compute(s);
+
         return z;
     }
 
-    private float gaussianDist(int n = 10)
+    private static float GaussianDist(int n = 10)
     {
         float sum = 0f;
 

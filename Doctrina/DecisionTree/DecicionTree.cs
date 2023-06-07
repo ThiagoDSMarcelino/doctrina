@@ -8,7 +8,7 @@ using Core;
 
 public class DecisionTree
 {
-    public Node Root { get; private set; }
+    public Node? Root { get; private set; }
     
     private int dataLength;
     
@@ -31,19 +31,20 @@ public class DecisionTree
         
         return result;
     }
+
     private float CheckNode(Node node, int[] data)
     {
         if (node.Decision(data[node.ColumnIndex]))
         {
             if (node.Right is not null)
-                return this.CheckNode(node.Right, data);
+                return CheckNode(node.Right, data);
 
             return node.Probability;
         }
         else
         {
             if (node.Left is not null)
-                return this.CheckNode(node.Left, data);
+                return CheckNode(node.Left, data);
             
             return node.Probability;
         }
@@ -51,31 +52,35 @@ public class DecisionTree
 
     public void Save(string path, int num = 0, string className = "DefaultModel")
     {
+        if (Root is null)
+            throw new NecessaryTrainingException();
+        
         path += ".cs";
         
-        StringBuilder func = new StringBuilder($"public partial class {className}" + "\n{\n");
+        StringBuilder func = new($"public partial class {className}" + "\n{\n");
         func.Append($"\tpublic float Choose{num}(int[] data)\n" + "\t{\n");
-        func.Append(this.appendNode(this.Root, 2, "if"));
+        func.Append(AppendNode(Root, 2, "if"));
         func.Append("\t}\n}");
 
         using StreamWriter sw = File.CreateText(path);
         sw.Write(func);
+        sw.Close();
     }
 
-    private StringBuilder appendNode(Node node, int tabCount, string comparative)
+    private StringBuilder AppendNode(Node node, int tabCount, string comparative)
     {
         string tab = string.Concat(Enumerable.Repeat("\t", tabCount));
         
         if (comparative == "if")
-            comparative += $"(data[{node.ColumnIndex}] {comparativeSing(node.Comparison)} {node.Target})";
+            comparative += $"(data[{node.ColumnIndex}] {ComparativeSing(node.Comparison)} {node.Target})";
         
-        StringBuilder nodeCode = new StringBuilder(tab + comparative + $"\n{tab}" + "{\n");
+        StringBuilder nodeCode = new(tab + comparative + $"\n{tab}" + "{\n");
 
         if (node.Right is not null)
-                nodeCode.Append(appendNode(node.Right, tabCount + 1, "if"));
+                nodeCode.Append(AppendNode(node.Right, tabCount + 1, "if"));
                 
         if (node.Left is not null)
-            nodeCode.Append(appendNode(node.Left, tabCount + 1, "else" ));
+            nodeCode.Append(AppendNode(node.Left, tabCount + 1, "else" ));
 
         if (!float.IsNaN(node.Probability))
             nodeCode.Append(tab + $"\treturn {node.Probability}f;\n".Replace(',', '.'));
@@ -84,27 +89,18 @@ public class DecisionTree
 
         return nodeCode;
     }
-    private string comparativeSing(ComparisonSigns comparison)
+
+    private static string ComparativeSing(ComparisonSigns comparator)
     {
-        switch (comparison)
+        return comparator switch
         {
-            case ComparisonSigns.Equal:
-                return "=";
-
-            case ComparisonSigns.Bigger:
-                return ">";
-
-            case ComparisonSigns.BiggerEqual:
-                return ">=";
-
-            case ComparisonSigns.Less:
-                return "<";
-
-            case ComparisonSigns.LessEqual:
-                return "<=";
-
-            default:
-                return "!=";
-        }
+            ComparisonSigns.Equal => "=",
+            ComparisonSigns.Different => "!=",
+            ComparisonSigns.Bigger => ">",
+            ComparisonSigns.BiggerEqual => ">=",
+            ComparisonSigns.Less => "<",
+            ComparisonSigns.LessEqual => "<=",
+            _ => throw new ArgumentException("Invalid comparator parameter", nameof(comparator))
+        };
     }
 }

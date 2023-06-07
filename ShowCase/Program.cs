@@ -3,7 +3,7 @@ using Doctrina.DecisionTreeLib;
 using Doctrina;
 using System;
 
-int[][] x = new int[][]
+int[][] X = new int[][]
 {
     new int[] { 1, 1, 1 },
     new int[] { 0, 0, 1 },
@@ -15,7 +15,7 @@ int[][] x = new int[][]
     new int[] { 0, 1, 0 }
 };
 
-int[] y = new int[]
+int[] Y = new int[]
 {
     1,
     1,
@@ -27,16 +27,17 @@ int[] y = new int[]
     0
 };
 
-DataSet<int, int> ds = DataSet<int, int>.Load(x, y);
+DataSet<int, int> ds = DataSet<int, int>.Load(X, Y);
 
 var (train, test) = ds.SplitTrainTest(0.25f);
 
 DecisionTree dt = new();
-dt.Fit(ds, 2, 3);
+dt.Fit(train, 2, 3);
 
-// Console.WriteLine($"{dt.Choose(test.X[0])} {dt.Choose(test.Y)}");
+foreach ((int[] x, int y) in test)
+    Console.WriteLine($"{dt.Choose(x)} {y}");
 
-dt.Save("Test/Test", 2, "TestModel");
+dt.Save("Test", 2, "TestModel");
 
 // NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
 
