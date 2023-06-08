@@ -2,6 +2,8 @@ namespace Doctrina.NeuralNetworkLib.Core;
 
 public class Layer
 {
+    public Neuron[] Neurons { get; private set; }
+
     public Layer(Neuron[] neurons) =>
         Neurons = neurons;
 
@@ -12,8 +14,6 @@ public class Layer
         for (int i = 0; i < neuronsSize; i++)
             Neurons[i] = new Neuron(dataSize, function);
     }
-
-    public Neuron[] Neurons { get; private set; }
 
     public float[] Output(float[] x)
     {

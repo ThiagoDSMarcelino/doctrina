@@ -12,14 +12,14 @@ public class DecisionTree
     
     private int dataLength;
     
-    public void Fit(DataSet<int, int> ds, int minSample, int maxDepth)
+    public void Fit(float[][] x, float[] y, int minSample, int maxDepth)
     {
         Root = new Node();
-        dataLength = ds.X[0].Length;
-        Root.Epoch(ds.X, ds.Y, minSample, maxDepth);
+        dataLength = x[0].Length;
+        Root.Epoch(x, y, minSample, maxDepth);
     }
 
-    public float Choose(int[] data)
+    public float Choose(float[] data)
     {
         if (Root is null)
             throw new NecessaryTrainingException();
@@ -32,7 +32,7 @@ public class DecisionTree
         return result;
     }
 
-    private float CheckNode(Node node, int[] data)
+    private float CheckNode(Node node, float[] data)
     {
         if (node.Decision(data[node.ColumnIndex]))
         {
@@ -50,16 +50,16 @@ public class DecisionTree
         }
     }
 
-    public void Save(string path, int num = 0, string className = "DefaultModel")
+    public void Save(string path)
     {
         if (Root is null)
             throw new NecessaryTrainingException();
-        
+
         path += ".cs";
         
-        StringBuilder func = new($"public partial class {className}" + "\n{\n");
-        func.Append($"\tpublic float Choose{num}(int[] data)\n" + "\t{\n");
-        func.Append(AppendNode(Root, 2, "if"));
+        StringBuilder func = new($"public partial class DecisionTreeModel" + "\n{\n");
+        func.Append($"\tpublic float Choose(int[] data)\n" + "\t{\n");
+        func.Append(AppendNodeCode(Root, 2, "if"));
         func.Append("\t}\n}");
 
         using StreamWriter sw = File.CreateText(path);
@@ -67,23 +67,23 @@ public class DecisionTree
         sw.Close();
     }
 
-    private StringBuilder AppendNode(Node node, int tabCount, string comparative)
+    private StringBuilder AppendNodeCode(Node node, int tabCount, string comparative)
     {
-        string tab = string.Concat(Enumerable.Repeat("\t", tabCount));
-        
+        string tab = new('\t', tabCount);
+
         if (comparative == "if")
-            comparative += $"(data[{node.ColumnIndex}] {ComparativeSing(node.Comparison)} {node.Target})";
+            comparative += $"(data[{node.ColumnIndex}] {ComparativeSing(node.Comparison)} {node.TargetValue})";
         
-        StringBuilder nodeCode = new(tab + comparative + $"\n{tab}" + "{\n");
+        StringBuilder nodeCode = new($"{tab}{comparative}\n{tab}" + "{\n");
 
         if (node.Right is not null)
-                nodeCode.Append(AppendNode(node.Right, tabCount + 1, "if"));
+                nodeCode.Append(AppendNodeCode(node.Right, tabCount + 1, "if"));
                 
         if (node.Left is not null)
-            nodeCode.Append(AppendNode(node.Left, tabCount + 1, "else" ));
+            nodeCode.Append(AppendNodeCode(node.Left, tabCount + 1, "else" ));
 
         if (!float.IsNaN(node.Probability))
-            nodeCode.Append(tab + $"\treturn {node.Probability}f;\n".Replace(',', '.'));
+            nodeCode.Append($"{tab}\treturn {node.Probability}f;\n".Replace(',', '.'));
         
         nodeCode.Append(tab + "}\n");
 
@@ -94,7 +94,7 @@ public class DecisionTree
     {
         return comparator switch
         {
-            ComparisonSigns.Equal => "=",
+            ComparisonSigns.Equal => "==",
             ComparisonSigns.Different => "!=",
             ComparisonSigns.Bigger => ">",
             ComparisonSigns.BiggerEqual => ">=",

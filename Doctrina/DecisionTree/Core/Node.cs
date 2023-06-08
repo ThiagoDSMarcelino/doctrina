@@ -8,13 +8,13 @@ public class Node
     
     public ComparisonSigns Comparison { get; private set; } = ComparisonSigns.Bigger;
     
-    public float Target { get; private set; }
+    public float TargetValue { get; private set; }
     
     public int ColumnIndex { get; private set; }
     
     public float Probability { get; private set; } = float.NaN;
     
-    public void Epoch(int[][] x, int[] y, int minSample, int maxDepth)
+    public void Epoch(float[][] x, float[] y, int minSample, int maxDepth)
     {
         if (maxDepth == 0 || x.GetLength(0) < minSample)
         {
@@ -36,17 +36,17 @@ public class Node
         
         ColumnIndex = colIndex;
 
-        Target = SelectTarget(
-            new int[x.Length]
-                .Select((_, i) => x[i][this.ColumnIndex])
+        TargetValue = SelectTarget(
+            new float[x.Length]
+                .Select((_, i) => x[i][ColumnIndex])
                 .ToArray()
         );
         
-        List<int[]>
+        List<float[]>
             leftX = new(),
             rightX = new();
         
-        List<int>
+        List<float>
             leftY = new(),
             rightY = new();
         
@@ -72,10 +72,10 @@ public class Node
         Left.Epoch(leftX.ToArray(), leftY.ToArray(), minSample, maxDepth - 1);
     }
 
-    public static float SelectTarget(int[] col) =>
+    public static float SelectTarget(float[] col) =>
         (col.Max() + col.Min()) / 2;
 
-    public static float[] InformationEntropy(int[][] x, int[] y)
+    public static float[] InformationEntropy(float[][] x, float[] y)
     {
         float
             n = y.Length,
@@ -87,8 +87,8 @@ public class Node
         
         for (int j = 0; j < x[0].Length; j++)
         {
-            int[]
-                col = new int[x.Length]
+            float[]
+                col = new float[x.Length]
                     .Select((e, i) => x[i][j])
                     .ToArray(),
                 attrs = col
@@ -139,7 +139,7 @@ public class Node
     }
 
 
-    public static float[] ContentEntropy(int[][] x, int[] y)
+    public static float[] ContentEntropy(float[][] x, float[] y)
     {
         float n = y.Length;
         
@@ -147,8 +147,8 @@ public class Node
 
         for (int j = 0; j < x[0].Length; j++)
         {
-            int[]
-                col = new int[x.Length]
+            float[]
+                col = new float[x.Length]
                     .Select((e, i) => x[i][j])
                     .ToArray(),
                 attrs = col
@@ -181,16 +181,16 @@ public class Node
         return result;
     }
 
-    public bool Decision(int value)
+    public bool Decision(float value)
     {
         return Comparison switch
         {
-            ComparisonSigns.Equal => value == Target,
-            ComparisonSigns.Bigger => value > Target,
-            ComparisonSigns.BiggerEqual => value >= Target,
-            ComparisonSigns.Less => value < Target,
-            ComparisonSigns.LessEqual => value <= Target,
-            ComparisonSigns.Different => value != Target,
+            ComparisonSigns.Equal => value == TargetValue,
+            ComparisonSigns.Bigger => value > TargetValue,
+            ComparisonSigns.BiggerEqual => value >= TargetValue,
+            ComparisonSigns.Less => value < TargetValue,
+            ComparisonSigns.LessEqual => value <= TargetValue,
+            ComparisonSigns.Different => value != TargetValue,
             _ => throw new Exception() // TODO
         };
     }

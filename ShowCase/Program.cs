@@ -1,21 +1,19 @@
-﻿using Doctrina.NeuralNetworkLib;
-using Doctrina.DecisionTreeLib;
-using Doctrina;
+﻿using Doctrina.DecisionTreeLib;
 using System;
 
-int[][] X = new int[][]
+float[][] X = new float[][]
 {
-    new int[] { 1, 1, 1 },
-    new int[] { 0, 0, 1 },
-    new int[] { 1, 0, 1 },
-    new int[] { 0, 1, 1 },
-    new int[] { 1, 1, 0 },
-    new int[] { 1, 0, 0 },
-    new int[] { 0, 0, 0 },
-    new int[] { 0, 1, 0 }
+    new float[] { 1, 1, 1 },
+    new float[] { 0, 0, 1 },
+    new float[] { 1, 0, 1 },
+    new float[] { 0, 1, 1 },
+    new float[] { 1, 1, 0 },
+    new float[] { 1, 0, 0 },
+    new float[] { 0, 0, 0 },
+    new float[] { 0, 1, 0 }
 };
 
-int[] Y = new int[]
+float[] Y = new float[]
 {
     1,
     1,
@@ -27,17 +25,13 @@ int[] Y = new int[]
     0
 };
 
-DataSet<int, int> ds = DataSet<int, int>.Load(X, Y);
-
-var (train, test) = ds.SplitTrainTest(0.25f);
-
 DecisionTree dt = new();
-dt.Fit(train, 2, 3);
+dt.Fit(X, Y, 2, 3);
 
-foreach ((int[] x, int y) in test)
-    Console.WriteLine($"{dt.Choose(x)} {y}");
+for (int i = 0; i < X.Length; i++)
+    Console.WriteLine($"{dt.Choose(X[i])} {Y[i]}");
 
-dt.Save("Test", 2, "TestModel");
+dt.Save("Test");
 
 // NeuralNetwork neuralNetwork = new NeuralNetwork(Functions.Sigmoid, 3, 3, 5, 2);
 
