@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowCase", "ShowCase\ShowCase.csproj", "{ECD58326-661F-4F2B-BAE5-0B86C7F303F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctrina.Test", "Doctrina.Test\Doctrina.Test.csproj", "{ECD58326-661F-4F2B-BAE5-0B86C7F303F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doctrina", "Doctrina\Doctrina.csproj", "{EBA43245-09E4-4663-99E1-612D38CD4483}"
 EndProject

@@ -6,8 +6,8 @@ public class NeuralNetwork
 {
     public Layer[] Layers { get; private set; }
 
-    public NeuralNetwork(Layer[] layer) =>
-        Layers = layer;
+    public NeuralNetwork(Layer[] layer)
+        =>  Layers = layer;
     
     public NeuralNetwork(ActivationFunction function, params int[] layersData)
     {

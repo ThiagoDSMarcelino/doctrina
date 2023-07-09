@@ -8,9 +8,9 @@ using Core;
 
 public class DecisionTree
 {
-    public Node? Root { get; private set; }
-    
     private int dataLength;
+    
+    public Node? Root { get; private set; }
     
     public void Fit(float[][] x, float[] y, int minSample, int maxDepth)
     {
@@ -77,7 +77,7 @@ public class DecisionTree
         StringBuilder nodeCode = new($"{tab}{comparative}\n{tab}" + "{\n");
 
         if (node.Right is not null)
-                nodeCode.Append(AppendNodeCode(node.Right, tabCount + 1, "if"));
+            nodeCode.Append(AppendNodeCode(node.Right, tabCount + 1, "if"));
                 
         if (node.Left is not null)
             nodeCode.Append(AppendNodeCode(node.Left, tabCount + 1, "else" ));
@@ -90,9 +90,8 @@ public class DecisionTree
         return nodeCode;
     }
 
-    private static string ComparativeSing(ComparisonSigns comparator)
-    {
-        return comparator switch
+    private static string ComparativeSing(ComparisonSigns sing)
+        => sing switch
         {
             ComparisonSigns.Equal => "==",
             ComparisonSigns.Different => "!=",
@@ -100,7 +99,6 @@ public class DecisionTree
             ComparisonSigns.BiggerEqual => ">=",
             ComparisonSigns.Less => "<",
             ComparisonSigns.LessEqual => "<=",
-            _ => throw new ArgumentException("Invalid comparator parameter", nameof(comparator))
+            _ => throw new ArgumentException("Invalid comparator parameter", nameof(sing))
         };
-    }
 }

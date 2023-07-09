@@ -22,9 +22,10 @@ public class Node
             return;
         }
 
-        float[] I = InformationEntropy(x, y),
-                C = ContentEntropy(x, y),
-                G = new float[I.Length];
+        float[]
+            I = InformationEntropy(x, y),
+            C = ContentEntropy(x, y),
+            G = new float[I.Length];
         
         for (int i = 0; i < G.Length; i++)
             G[i] = I[i] / C[i];
@@ -72,8 +73,8 @@ public class Node
         Left.Epoch(leftX.ToArray(), leftY.ToArray(), minSample, maxDepth - 1);
     }
 
-    public static float SelectTarget(float[] col) =>
-        (col.Max() + col.Min()) / 2;
+    public static float SelectTarget(float[] col)
+        => (col.Max() + col.Min()) / 2;
 
     public static float[] InformationEntropy(float[][] x, float[] y)
     {
@@ -182,8 +183,7 @@ public class Node
     }
 
     public bool Decision(float value)
-    {
-        return Comparison switch
+        => Comparison switch
         {
             ComparisonSigns.Equal => value == TargetValue,
             ComparisonSigns.Bigger => value > TargetValue,
@@ -193,5 +193,4 @@ public class Node
             ComparisonSigns.Different => value != TargetValue,
             _ => throw new Exception() // TODO
         };
-    }
 }

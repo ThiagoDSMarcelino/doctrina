@@ -17,5 +17,5 @@ public static class Functions
 
 
     private static readonly ActivationFunction tanh = new Tanh();
-    public static ActivationFunction Tanh => tanh;
+    public static ActivationFunction TanH => tanh;
 }

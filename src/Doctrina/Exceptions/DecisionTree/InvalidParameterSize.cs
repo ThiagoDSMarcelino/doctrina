@@ -7,8 +7,9 @@ public class InvalidParameterSizeException : Exception
     public InvalidParameterSizeException(string message, Exception inner) : base(message, inner) { }
     protected InvalidParameterSizeException(
         System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        System.Runtime.Serialization.StreamingContext context)
+        : base(info, context) { }
 
-    public override string Message =>
-        "The array of inputs is not the same size";
+    public override string Message
+        => "The array of inputs is not the same size";
 }
