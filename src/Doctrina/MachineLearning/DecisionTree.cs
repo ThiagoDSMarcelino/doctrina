@@ -1,10 +1,10 @@
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace Doctrina.MachineLearning;
 
-using Exceptions.DecisionTreeExceptions;
 using Core;
+using Exceptions;
 
 public class DecisionTree
 {

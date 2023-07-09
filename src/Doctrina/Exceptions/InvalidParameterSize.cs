@@ -1,4 +1,4 @@
-namespace Doctrina.Exceptions.DecisionTreeExceptions;
+namespace Doctrina.Exceptions;
 
 public class InvalidParameterSizeException : Exception
 {

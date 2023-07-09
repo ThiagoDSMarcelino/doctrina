@@ -1,7 +1,7 @@
 namespace Doctrina.DeepLearning.Core;
 
-using Exceptions.NeuralNetworkExceptions;
 using ActivationFuntions;
+using Exceptions;
 
 public class Neuron
 {
