@@ -1,10 +1,10 @@
-namespace Doctrina.NeuralNetworkLib;
+namespace Doctrina.DeepLearning;
 
-using Core;
+using Core.ActivationFuntions;
 
 public static class Functions
 {
-    private static readonly ActivationFunction reLu = new Relu();
+    private static readonly ActivationFunction reLu = new ReLu();
     public static ActivationFunction ReLu => reLu;
 
 
@@ -16,6 +16,6 @@ public static class Functions
     public static ActivationFunction Linear => linear;
 
 
-    private static readonly ActivationFunction tanh = new Tanh();
+    private static readonly ActivationFunction tanh = new TanH();
     public static ActivationFunction TanH => tanh;
 }

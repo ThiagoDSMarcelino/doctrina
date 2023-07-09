@@ -1,4 +1,6 @@
-namespace Doctrina.NeuralNetworkLib.Core;
+namespace Doctrina.DeepLearning.Core;
+
+using ActivationFuntions;
 
 public class Layer
 {

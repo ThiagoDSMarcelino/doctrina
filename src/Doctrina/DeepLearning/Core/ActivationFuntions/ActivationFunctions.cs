@@ -1,4 +1,4 @@
-namespace Doctrina.NeuralNetworkLib.Core;
+namespace Doctrina.DeepLearning.Core.ActivationFuntions;
 
 public abstract class ActivationFunction
 {

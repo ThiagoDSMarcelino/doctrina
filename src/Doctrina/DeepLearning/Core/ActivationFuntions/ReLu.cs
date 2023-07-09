@@ -1,6 +1,6 @@
-namespace Doctrina.NeuralNetworkLib.Core;
+namespace Doctrina.DeepLearning.Core.ActivationFuntions;
 
-public class Relu : ActivationFunction
+public class ReLu : ActivationFunction
 {
     public override float Compute(float x)
     {

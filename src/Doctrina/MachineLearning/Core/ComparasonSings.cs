@@ -1,4 +1,4 @@
-namespace Doctrina.DecisionTreeLib.Core;
+namespace Doctrina.MachineLearning.Core;
 
 public enum ComparisonSigns
 {

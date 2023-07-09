@@ -1,4 +1,4 @@
-﻿using Doctrina.DecisionTreeLib;
+﻿using Doctrina.MachineLearning;
 using System;
 
 float[][] X = new float[][]

@@ -1,7 +1,7 @@
 using System.Text;
 using System.IO;
 
-namespace Doctrina.DecisionTreeLib;
+namespace Doctrina.MachineLearning;
 
 using Exceptions.DecisionTreeExceptions;
 using Core;

@@ -1,5 +1,7 @@
-namespace Doctrina.NeuralNetworkLib;
 
+namespace Doctrina.DeepLearning;
+
+using Core.ActivationFuntions;
 using Core;
 
 public class NeuralNetwork
@@ -29,26 +31,29 @@ public class NeuralNetwork
         return x;
     }
 
-    public (int Result, float Probability) Choose(params float[] x) {
+    public NeuralNetworkResult Choose(params float[] x) {
         float[] output = Output(x);
-        float probability = float.MaxValue;
-        int result = int.MinValue;
+
+        var result = new NeuralNetworkResult()
+        {
+            Result = int.MinValue,
+            Probability = float.MaxValue
+        };
 
         for (int i = 0; i < output.Length; i++)
         {
             float value = output[i];
 
-            if (probability > value)
+            if (result.Probability > value)
             {
-                probability = value;
-                result = i;
+                result.Probability = value;
+                result.Result = i;
             }
         }
 
-        return (result, probability);
+        return result;
     }
         
-
     public float Score(float[][] x, float[] y)
     {
         float E = 0;

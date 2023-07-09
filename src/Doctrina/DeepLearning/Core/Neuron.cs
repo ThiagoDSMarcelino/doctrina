@@ -1,6 +1,7 @@
-namespace Doctrina.NeuralNetworkLib.Core;
+namespace Doctrina.DeepLearning.Core;
 
 using Exceptions.NeuralNetworkExceptions;
+using ActivationFuntions;
 
 public class Neuron
 {

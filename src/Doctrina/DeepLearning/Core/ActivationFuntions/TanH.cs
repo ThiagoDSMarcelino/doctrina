@@ -1,6 +1,6 @@
-namespace Doctrina.NeuralNetworkLib.Core;
+namespace Doctrina.DeepLearning.Core.ActivationFuntions;
 
-public class Tanh : ActivationFunction
+public class TanH : ActivationFunction
 {
     public override float Compute(float x)
         => MathF.Tanh(x);
