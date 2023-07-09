@@ -31,27 +31,24 @@ public class NeuralNetwork
         return x;
     }
 
-    public NeuralNetworkResult Choose(params float[] x) {
+    public (float Result, float Probability) Choose(params float[] x) {
         float[] output = Output(x);
 
-        var result = new NeuralNetworkResult()
-        {
-            Result = int.MinValue,
-            Probability = float.MaxValue
-        };
+        var result = int.MinValue;
+        var probability = float.MaxValue;
 
         for (int i = 0; i < output.Length; i++)
         {
             float value = output[i];
 
-            if (result.Probability > value)
+            if (probability > value)
             {
-                result.Probability = value;
-                result.Result = i;
+                probability = value;
+                result = i;
             }
         }
 
-        return result;
+        return (result, probability);
     }
         
     public float Score(float[][] x, float[] y)
